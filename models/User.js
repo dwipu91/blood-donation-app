@@ -31,9 +31,9 @@ const userSchema = mongoose.Schema(
       trim: true,
     },
     role: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Role",
-      required: null,
+      type: String,
+      default: "patient",
+      enum: ["patient", "doner", "admin"],
     },
     gender: {
       type: String,

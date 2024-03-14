@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import UseForm from "../../hooks/UseForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerPatient } from "../../features/auth/authApiSlice";
+import createToast from "../../utils/toastify";
+import {
+  authSelectorsSlice,
+  setMessageEmpty,
+} from "../../features/auth/authSlice";
+import { useEffect } from "react";
 
 const Register = () => {
   const dispatch = useDispatch();
+
+  const { error, message, loading } = useSelector(authSelectorsSlice);
 
   const { input, handelInputChange, fromRrset } = UseForm({
     name: "",
@@ -16,6 +24,19 @@ const Register = () => {
   const handlePatientCreate = () => {
     dispatch(registerPatient(input));
   };
+
+  useEffect(() => {
+    if (message) {
+      createToast(message, "success");
+      dispatch(setMessageEmpty());
+      fromRrset();
+    }
+
+    if (error) {
+      createToast(error);
+      dispatch(setMessageEmpty());
+    }
+  }, [message, error, dispatch, fromRrset]);
 
   return (
     <>

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+
 // register patient
 export const registerPatient = createAsyncThunk(
   "atuh/registerPatient",
@@ -8,7 +9,9 @@ export const registerPatient = createAsyncThunk(
       const respons = await axios.post(
         `http://localhost:5050/api/v1/auth/register`,
         data,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
 
       return respons.data;

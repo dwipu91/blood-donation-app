@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
+import "react-toastify/dist/ReactToastify.css";
+
 import App from "./App.jsx";
 import "./assets/froentend/css/bootstrap.min.css";
 import "./assets/froentend/plugins/fontawesome/css/fontawesome.min.css";

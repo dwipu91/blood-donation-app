@@ -1,6 +1,12 @@
+import  from ""
 import { Link } from "react-router-dom";
 
 const DonerRegister = () => {
+
+
+const dipstatch = useDispatch()
+
+
   return (
     <>
       {/* Page Content */}

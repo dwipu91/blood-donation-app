@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { registerPatient } from "./authApiSlice";
 
 const authSlice = createSlice({
   name: "auth",
@@ -8,14 +9,34 @@ const authSlice = createSlice({
     error: null,
     loader: false,
   },
-  reducers: {},
-  extraReducers: (builder) => {},
+
+  reducers: {
+    setMessageEmpty: (state) => {
+      state.error = null;
+      state.message = null;
+    },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(registerPatient.pending, (state) => {
+        state.loader = true;
+      })
+      .addCase(registerPatient.rejected, (state, action) => {
+        state.loader = false;
+        state.error = action.error.message;
+      })
+      .addCase(registerPatient.fulfilled, (state, action) => {
+        state.loader = false;
+        state.message = action.payload.message;
+      });
+  },
 });
 
 // selectors
-
+export const authSelectorsSlice = (state) => state.auth;
 // export action
-export const {} = authSlice.actions;
+export const { setMessageEmpty } = authSlice.actions;
 
 // reducer
 export default authSlice.reducer;

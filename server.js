@@ -7,6 +7,7 @@ import authRouter from "./route/auth.js";
 import { errorHandler } from "./middlewares/errorhandler.js";
 import { mongoBDConnect } from "./config/db.js";
 import cors from "cors";
+
 // initialization
 const app = express();
 dotenv.config();
@@ -17,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3000/"],
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
