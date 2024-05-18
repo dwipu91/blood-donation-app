@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UseForm from "../../hooks/UseForm";
 import { useDispatch, useSelector } from "react-redux";
 import { registerPatient } from "../../features/auth/authApiSlice";
@@ -13,11 +13,14 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const { error, message, loading } = useSelector(authSelectorsSlice);
+  const navigate = useNavigate();
 
-  const { input, handelInputChange, fromRrset } = UseForm({
+  const { input, handelInputChange, formReset } = UseForm({
     name: "",
     auth: "",
     password: "",
+    role: "patient",
+    cpass: "",
   });
 
   // handlePatientCreate
@@ -29,14 +32,15 @@ const Register = () => {
     if (message) {
       createToast(message, "success");
       dispatch(setMessageEmpty());
-      fromRrset();
+      formReset();
+      navigate("/login");
     }
 
     if (error) {
       createToast(error);
       dispatch(setMessageEmpty());
     }
-  }, [message, error, dispatch, fromRrset]);
+  }, [message, error, dispatch, formReset, navigate]);
 
   return (
     <>
@@ -96,6 +100,18 @@ const Register = () => {
                       />
                       <label className="focus-label">Create Password</label>
                     </div>
+
+                    <div className="mb-3 form-focus">
+                      <input
+                        type="password"
+                        className="form-control floating"
+                        name="cpass"
+                        value={input.cpass}
+                        onChange={handelInputChange}
+                      />
+                      <label className="focus-label">Confirm Password</label>
+                    </div>
+
                     <div className="text-end">
                       <Link className="forgot-link" to="/login">
                         Already have an account?
@@ -106,7 +122,7 @@ const Register = () => {
                       type="submit"
                       onClick={handlePatientCreate}
                     >
-                      Signup
+                      {loading ? "Creating....." : "Singup"}
                     </button>
                     <div className="login-or">
                       <span className="or-line" />

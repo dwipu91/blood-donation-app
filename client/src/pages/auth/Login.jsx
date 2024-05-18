@@ -1,7 +1,47 @@
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import doccure from "../../assets/froentend/img/login-banner.png";
+import {
+  authSelectorsSlice,
+  setMessageEmpty,
+} from "../../features/auth/authSlice";
+import { useEffect } from "react";
+import createToast from "../../utils/toastify";
+import UseForm from "../../hooks/UseForm";
+import { loginUser } from "../../features/auth/authApiSlice";
 
 const Loigin = () => {
+  const dispatch = useDispatch();
+  const { error, message, loader } = useSelector(authSelectorsSlice);
+
+  const navigate = useNavigate();
+
+  const { input, handelInputChange, formReset } = UseForm({
+    auth: "",
+    password: "",
+  });
+
+  // handlePatientCreate
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    dispatch(loginUser(input));
+  };
+
+  useEffect(() => {
+    if (message) {
+      createToast(message, "success");
+      dispatch(setMessageEmpty());
+      formReset();
+
+      navigate("/dashboard");
+    }
+    if (error) {
+      createToast(error);
+      dispatch(setMessageEmpty());
+    }
+  }, [message, error, dispatch, formReset]);
+
   return (
     <>
       {/* Page Content */}
@@ -25,15 +65,24 @@ const Loigin = () => {
                         Login <span>Doccure</span>
                       </h3>
                     </div>
-                    <form action="index.html">
+                    <form action="" onSubmit={handleLogin}>
                       <div className="mb-3 form-focus">
-                        <input type="email" className="form-control floating" />
+                        <input
+                          type="text"
+                          className="form-control floating"
+                          name="auth"
+                          value={input.auth}
+                          onChange={handelInputChange}
+                        />
                         <label className="focus-label">Email</label>
                       </div>
                       <div className="mb-3 form-focus">
                         <input
                           type="password"
                           className="form-control floating"
+                          name="password"
+                          value={input.password}
+                          onChange={handelInputChange}
                         />
                         <label className="focus-label">Password</label>
                       </div>
@@ -45,8 +94,9 @@ const Loigin = () => {
                       <button
                         className="btn btn-primary w-100 btn-lg login-btn"
                         type="submit"
+                        // onSubmit={handleLogin}
                       >
-                        Login
+                        {loader ? "Loading ......" : "Login"}
                       </button>
                       <div className="login-or">
                         <span className="or-line" />

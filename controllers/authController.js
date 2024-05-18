@@ -19,11 +19,16 @@ import { AccountActivationEmail } from "../mails/AccountActivationEmail.js";
  * @access public
  */
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, auth, password } = req.body;
+  const { name, auth, password, role, cpass } = req.body;
 
   //validation
   if (!name || !auth || !password) {
     return res.status(400).json({ message: "all fildes are required" });
+  }
+
+  // password confirm check
+  if (password !== cpass) {
+    return res.status(400).json({ message: "Password not match" });
   }
 
   // create OTP
@@ -60,6 +65,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     mobile: authMobile,
     password: hasePassword,
     accessToken: otp,
+    role: role,
   });
 
   if (user) {
@@ -115,6 +121,7 @@ export const accoutActivatioByOtp = asyncHandler(async (req, res) => {
   }
   // activate user
   let activatieUser = null;
+
   if (isEmail(tokenVaerify.auth)) {
     activatieUser = await User.findOne({ email: tokenVaerify.auth });
     if (!activatieUser) {
@@ -155,7 +162,9 @@ export const accoutActivatioByOtp = asyncHandler(async (req, res) => {
  * @mathod POST
  * @route /api/v1/auth/login
  * @access public
+ *
  */
+
 export const login = asyncHandler(async (req, res) => {
   const { auth, password } = req.body;
 
@@ -219,21 +228,19 @@ export const login = asyncHandler(async (req, res) => {
  */
 export const getLogInUser = asyncHandler(async (req, res) => {
   if (!req.me) {
-    return res.status(404).json({ message: "Log in user data not found" });
+    return res.status(404).json({ message: "Login user data not found" });
   }
 
-  res.status(200).json({ auth: req.me, message: "log in" });
+  res.status(200).json({ auth: req.me, message: "login user found" });
 });
 
 /**
  *
- *
- *@descripation user log out
+ *@descripation user logout
  * @mathod post
  * @route /api/v1/auth/logout
  * @access private
  */
-
 export const logout = asyncHandler(async (req, res) => {
   res.clearCookie("accessToken");
   res.status(200).json({ message: "Logout successful" });

@@ -20,6 +20,11 @@ const userSchema = mongoose.Schema(
       trim: true,
       required: true,
     },
+    dathOfBirth: {
+      type: String,
+      default: null,
+      trim: true,
+    },
     location: {
       type: String,
       default: null,

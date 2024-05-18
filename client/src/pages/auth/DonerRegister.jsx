@@ -1,11 +1,46 @@
-import  from ""
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  authSelectorsSlice,
+  setMessageEmpty,
+} from "../../features/auth/authSlice";
+import { useEffect } from "react";
+import createToast from "../../utils/toastify";
+import UseForm from "../../hooks/UseForm";
+import { registerDonor } from "../../features/auth/authApiSlice";
 
 const DonerRegister = () => {
+  const dipstatch = useDispatch();
+  const { error, message, loader } = useSelector(authSelectorsSlice);
 
+  const { input, handelInputChange, formReset } = UseForm({
+    name: "",
+    auth: "",
+    password: "",
+    role: "donor",
+    cpass: "",
+  });
 
-const dipstatch = useDispatch()
+  // handleDonerRegister
+  const handleDonerRegister = (e) => {
+    e.prevendDefault();
 
+    dipstatch(registerDonor(input));
+  };
+
+  //  use effect
+  useEffect(() => {
+    if (message) {
+      createToast(message, "success");
+      dipstatch(setMessageEmpty());
+      formReset();
+    }
+
+    if (error) {
+      createToast(error);
+      dipstatch(setMessageEmpty());
+    }
+  }, [message, error, dipstatch, formReset]);
 
   return (
     <>
@@ -32,21 +67,48 @@ const dipstatch = useDispatch()
                       </h3>
                     </div>
                     {/* Register Form */}
-                    <form action="patient-register-step1.html">
+                    <form onSubmit={handleDonerRegister}>
                       <div className="mb-3 form-focus">
-                        <input type="text" className="form-control floating" />
+                        <input
+                          type="text"
+                          className="form-control floating"
+                          name="name"
+                          value={input.name}
+                          onChange={handelInputChange}
+                        />
                         <label className="focus-label">Name</label>
                       </div>
                       <div className="mb-3 form-focus">
-                        <input type="text" className="form-control floating" />
-                        <label className="focus-label">Mobile Number</label>
+                        <input
+                          type="text"
+                          className="form-control floating"
+                          name="auth"
+                          value={input.auth}
+                          onChange={handelInputChange}
+                        />
+                        <label className="focus-label">
+                          Eamil / Mobile Number
+                        </label>
                       </div>
                       <div className="mb-3 form-focus">
                         <input
                           type="password"
                           className="form-control floating"
+                          name="password"
+                          value={input.password}
+                          onChange={handelInputChange}
                         />
                         <label className="focus-label">Create Password</label>
+                      </div>
+                      <div className="mb-3 form-focus">
+                        <input
+                          type="password"
+                          className="form-control floating"
+                          name="cpass"
+                          value={input.cpass}
+                          onChange={handelInputChange}
+                        />
+                        <label className="focus-label">Confirm Password</label>
                       </div>
                       <div className="text-end">
                         <Link className="forgot-link" to="/login">
@@ -57,7 +119,7 @@ const dipstatch = useDispatch()
                         className="btn btn-primary w-100 btn-lg login-btn"
                         type="submit"
                       >
-                        Signup
+                        {loader ? "Creating.... " : "Singup"}
                       </button>
                       <div className="login-or">
                         <span className="or-line" />

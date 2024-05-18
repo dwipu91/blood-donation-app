@@ -1,7 +1,9 @@
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { isEmail, isMobile } from "../helpers/helpers.js";
 
+// verify token
 const tokenVerify = (req, res, next) => {
   // const authHeader = req.headers.authorization || req.headers.Authorization;
   const accessTOken = req.cookies.accessToken;
@@ -18,9 +20,16 @@ const tokenVerify = (req, res, next) => {
         return res.status(400).json({ message: "Invalid verify Token" });
       }
 
-      const me = await User.findOne({ email: decode.email })
-        .select("-password")
-        .populate("role");
+      // get login user data
+
+      let me = null;
+      if (isEmail(decode.auth)) {
+        me = await User.findOne({ email: decode.email }).select(
+          "-password accessToken"
+        );
+      } else if (isMobile(decode.auth)) {
+        me = await User.findOne({ phone: decode.auth }).select("-password");
+      }
     })
   );
   req.me = me;

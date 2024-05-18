@@ -1,30 +1,37 @@
-import Layout from "../component/layouts/Layout";
 import DonerRegister from "../pages/auth/DonerRegister";
-import Loigin from "../pages/auth/Loigin";
-import Register from "../pages/auth/Register";
+import Layout from "../component/layouts/Layout";
+import Login from "../pages/auth/Login";
+import PublicGard from "./PublicGard";
 import Dashboard from "../pages/dashbord/Dashboard";
+import Register from "../pages/auth/Register";
 
 // create public route
 export const publicRoute = [
   {
-    element: <Layout />,
+    element: <PublicGard />,
     children: [
       {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/login",
-        element: <Loigin />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
-      },
-      {
-        path: "/doner-register",
-        element: <DonerRegister />,
+        element: <Layout />,
+        children: [
+          {
+            path: "/login",
+            element: <Login />,
+          },
+          {
+            path: "/register",
+            element: <Register />,
+          },
+          {
+            path: "/dashboard",
+            element: <Dashboard />,
+          },
+          {
+            path: "/doner-register",
+            element: <DonerRegister />,
+          },
+        ],
       },
     ],
   },
 ];
+// PublicGard

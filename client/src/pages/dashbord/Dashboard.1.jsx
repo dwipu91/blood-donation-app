@@ -5,18 +5,17 @@ import pt03 from "../../assets/froentend/img/specialities/pt-dashboard-03.png";
 import pt04 from "../../assets/froentend/img/specialities/pt-dashboard-04.png";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../../features/auth/authApiSlice";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import UseAuth from "../../hooks/UseAuth";
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const dispatch = useDispatch();
-  const { auth } = UseAuth();
-
-  console.log(auth);
+  const { user } = UseAuth();
 
   const handleUserLogout = (e) => {
     e.preventDefault();
-
+    navigator("/login");
+    alert();
     dispatch(logoutUser());
   };
 
@@ -102,10 +101,10 @@ const Dashboard = () => {
                         </a>
                       </li>
                       <li>
-                        <Link to="profile-setting">
+                        <a href="profile-settings.html">
                           <i className="fas fa-user-cog" />
                           <span>Profile Settings</span>
-                        </Link>
+                        </a>
                       </li>
                       <li>
                         <a href="change-password.html">
@@ -114,7 +113,7 @@ const Dashboard = () => {
                         </a>
                       </li>
                       <li>
-                        <Link to="login" onClick={handleUserLogout}>
+                        <Link to="/login" onClick={handleUserLogout}>
                           <i className="fas fa-sign-out-alt" />
                           <span>Logout</span>
                         </Link>
@@ -125,8 +124,6 @@ const Dashboard = () => {
               </div>
             </div>
             {/* / Profile Sidebar */}
-            <Outlet />
-
             <div className="col-md-7 col-lg-8 col-xl-9">
               <div className="row">
                 <div className="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
@@ -2145,5 +2142,3 @@ const Dashboard = () => {
     </>
   );
 };
-
-export default Dashboard;

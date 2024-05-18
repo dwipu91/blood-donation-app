@@ -13,10 +13,10 @@ const UseForm = (initialState) => {
   };
 
   //from reset
-  const fromRrset = () => {
+  const formReset = () => {
     setInput(initialState);
   };
-  return { input, handelInputChange, fromRrset };
+  return { input, handelInputChange, formReset };
 };
 
 export default UseForm;
